@@ -1,0 +1,180 @@
+{
+  "elapsed_s": 1.586,
+  "parameters": {
+    "dmnd_gen_data": {
+      "dgs": {
+        "lv": null,
+        "mv": [
+          "1106",
+          "1142"
+        ]
+      },
+      "dytm": {
+        "lv": null,
+        "mv": "ic"
+      },
+      "fcs": {
+        "lv": null,
+        "mv": [
+          "1107",
+          "1143"
+        ]
+      },
+      "hps": {
+        "lv": "hps_pen",
+        "mv": "mv"
+      },
+      "ic": {
+        "lv": null,
+        "mv": "not_rs"
+      },
+      "ovnt": {
+        "lv": "ev_pen",
+        "mv": "rs"
+      },
+      "rs": {
+        "lv": "lv",
+        "mv": "rs_pen"
+      },
+      "slr": {
+        "lv": "slr_pen",
+        "mv": "rs"
+      }
+    },
+    "dytm_dist": "uniform",
+    "dytm_dist_params": [
+      0.1,
+      0.2
+    ],
+    "ev_pen": 80.0,
+    "hps_pen": 60.0,
+    "network_data": {
+      "lv_ilist": [
+        0,
+        10,
+        30
+      ],
+      "lv_list": [
+        "1101",
+        "1105",
+        "1103"
+      ],
+      "lv_sel": "lv_list",
+      "mixed": [
+        "1108",
+        "1109",
+        "1151",
+        "1158",
+        "1175"
+      ],
+      "n_id": 1060,
+      "n_lv": 5,
+      "near_edge": [
+        "1103",
+        "1109",
+        "1166",
+        "1145",
+        "1131"
+      ],
+      "near_sub": [
+        "1101",
+        "1137",
+        "1110",
+        "1116",
+        "1117"
+      ],
+      "oltc_bandwidth": 2.0,
+      "oltc_setpoint": 106.0,
+      "xfmr_scale": 1.5
+    },
+    "plot_options": {
+      "lv_comparison": true,
+      "lv_voltages": [
+        "1101",
+        "1103"
+      ],
+      "profile_sel": [
+        "hp_love_Jan"
+      ]
+    },
+    "rand_seed": 0,
+    "rs_pen": 90.0,
+    "slr_pen": 30.0,
+    "solar_dist": "uniform",
+    "solar_dist_params": [
+      1.5,
+      3.5
+    ]
+  },
+  "plots": {
+    "lv_comparison": {
+      "bytes": 58512,
+      "sha256": "6b442f22ca8b56b49e0bb2dd6ca785ce645449a71636056b671e1c9b0eaeb130"
+    },
+    "lv_voltages": {
+      "bytes": 90506,
+      "sha256": "8268a45d21a45246380dd7ad7eed82fba54be5ecfeb6e1000c589d1e1ea090f5"
+    },
+    "mv_highlevel": {
+      "bytes": 62307,
+      "sha256": "6d7c1e9ba80c5501ac3b90c3d9574a315d4c06a75eac8b1c8a8e3b18d9e42c55"
+    },
+    "mv_highlevel_clean": {
+      "bytes": 23663,
+      "sha256": "a392266c2014ad7090d33c15c289cb47ab9d4fc655b9a03f109c64fcd1ba3c6b"
+    },
+    "mv_powers": {
+      "bytes": 54224,
+      "sha256": "8554531933495a577bfcd8eea3af187d856a1d19e26707b18e1ad3bd45b620f3"
+    },
+    "mv_voltages": {
+      "bytes": 49509,
+      "sha256": "e16f7c1ce5d6760a6eba1e437158b51a398959967ac2874fdfe98cf633c5d594"
+    },
+    "pmry_loadings": {
+      "bytes": 58043,
+      "sha256": "8e73f117ac1719347cc6865e8b01f6e45f5b9a7d22f94a522f54284f53f7a159"
+    },
+    "pmry_powers": {
+      "bytes": 54460,
+      "sha256": "ee0b88fa4a8536c4d318db98deb947e5d12b8bdb82fa20e68261b33dc8aa98a2"
+    },
+    "profile_options": {
+      "bytes": 38266,
+      "sha256": "b4d75657b5c34fef0f4dff0f191086025b96f7ce34712c83e2b7766874f3c60f"
+    },
+    "profile_options_dgs": {
+      "bytes": 6830,
+      "sha256": "af5f14d3fd62d69d2cb06a2b3b06be610e11f8940ad38f151ce0bcabfd6af8f5"
+    },
+    "profile_options_fcs": {
+      "bytes": 6830,
+      "sha256": "af5f14d3fd62d69d2cb06a2b3b06be610e11f8940ad38f151ce0bcabfd6af8f5"
+    },
+    "trn_powers": {
+      "bytes": 52683,
+      "sha256": "9911314f74dfd58ad1a2d4f39c37842ca9ffd72f53279bc973f6a718b63ff272"
+    }
+  },
+  "scenario": {
+    "description": "Urban, explicit LV list + plot list, EV+PV+HP together, non-default transformer scale, OLTC setpoint and bandwidth",
+    "id": "urban_lvlist_all_lcts_xfmr_oltc",
+    "params": {
+      "lv_ev_pen": "0.8",
+      "lv_ev_profile": "Crowdcharge\u20147kW",
+      "lv_hp_pen": "0.6",
+      "lv_hp_profile": "Mild weekend",
+      "lv_list": "1101,1105,1103",
+      "lv_plot_list": "1101,1103",
+      "lv_pv_pen": "0.3",
+      "lv_pv_profile": "Winter",
+      "n_id": "1060",
+      "oltc_bandwidth": "0.02",
+      "oltc_setpoint": "1.06",
+      "rs_pen": "0.9",
+      "xfmr_scale": "1.5"
+    }
+  },
+  "status": 200,
+  "url": "http://127.0.0.1:8010/simulate?n_id=1060&lv_list=1101%2C1105%2C1103&lv_plot_list=1101%2C1103&xfmr_scale=1.5&oltc_setpoint=1.06&oltc_bandwidth=0.02&rs_pen=0.9&lv_ev_profile=Crowdcharge%E2%80%947kW&lv_ev_pen=0.8&lv_pv_profile=Winter&lv_pv_pen=0.3&lv_hp_profile=Mild+weekend&lv_hp_pen=0.6"
+}

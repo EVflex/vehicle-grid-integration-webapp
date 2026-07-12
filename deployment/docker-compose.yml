@@ -1,0 +1,71 @@
+# NEW (2026-07-06, see CHANGES.md §13): single-server deployment.
+# Replaces the Azure Functions + Static Web Apps + Terraform stack
+# (azure_funcs/, infrastructure/) with two containers on one VPS:
+#
+#   api — the FastAPI simulation service, built from the EXISTING
+#         docker_images/vgi_api.dockerfile (old code, reused unchanged).
+#   web — NEW: builds the existing Vue frontend (src/, unchanged) and serves
+#         it with Caddy, which also terminates HTTPS (automatic Let's Encrypt
+#         certificates) and rate-limits the anonymous /simulate endpoint.
+#
+# Usage:  cp .env.example .env   # fill in DOMAIN and ACME_EMAIL
+#         docker compose up -d --build
+
+name: vgi
+
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: docker_images/vgi_api.dockerfile
+    restart: unless-stopped
+    environment:
+      # Only the frontend origin may call the API from a browser.
+      VGI_CORS_ORIGINS: "https://${DOMAIN}"
+      # Simulations each API worker may run in parallel (x2 gunicorn workers
+      # = total concurrent simulations). Budget ~400 MB RAM per simulation;
+      # raise this only alongside server RAM. 1 => up to 2 concurrent.
+      VGI_MAX_PARALLEL_SIMULATIONS: "${VGI_MAX_PARALLEL_SIMULATIONS:-1}"
+    # Hard ceiling so a pathological request cannot take down the whole
+    # server; the container is restarted if it is ever hit.
+    mem_limit: 3g
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request as u; u.urlopen('http://127.0.0.1/health-check', timeout=4)",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  web:
+    build:
+      context: ..
+      dockerfile: deployment/web.dockerfile
+      args:
+        # Baked into the frontend bundle at build time (the Vue app reads
+        # process.env.VUE_APP_API_URL). The API lives on its own subdomain
+        # because the frontend resolves absolute paths against this base.
+        VUE_APP_API_URL: "https://api.${DOMAIN}"
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp" # HTTP/3
+    environment:
+      DOMAIN: ${DOMAIN}
+      ACME_EMAIL: ${ACME_EMAIL}
+    volumes:
+      # TLS certificates and ACME account — the only state worth keeping.
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:

@@ -1,0 +1,171 @@
+{
+  "elapsed_s": 2.838,
+  "parameters": {
+    "dmnd_gen_data": {
+      "dgs": {
+        "lv": null,
+        "mv": [
+          "1106",
+          "1142"
+        ]
+      },
+      "dytm": {
+        "lv": null,
+        "mv": "ic"
+      },
+      "fcs": {
+        "lv": null,
+        "mv": [
+          "1107",
+          "1143"
+        ]
+      },
+      "hps": {
+        "lv": "hps_pen",
+        "mv": "mv"
+      },
+      "ic": {
+        "lv": null,
+        "mv": "not_rs"
+      },
+      "ovnt": {
+        "lv": "ev_pen",
+        "mv": "rs"
+      },
+      "rs": {
+        "lv": "lv",
+        "mv": "rs_pen"
+      },
+      "slr": {
+        "lv": "slr_pen",
+        "mv": "rs"
+      }
+    },
+    "dytm_dist": "uniform",
+    "dytm_dist_params": [
+      0.1,
+      0.2
+    ],
+    "ev_pen": 0.0,
+    "hps_pen": 0.0,
+    "network_data": {
+      "lv_ilist": [
+        0,
+        10,
+        30
+      ],
+      "lv_list": [
+        "1102",
+        "1154",
+        "1262",
+        "1206",
+        "1202"
+      ],
+      "lv_sel": "lv_list",
+      "mixed": [
+        "1108",
+        "1109",
+        "1151",
+        "1158",
+        "1175"
+      ],
+      "n_id": 1061,
+      "n_lv": 5,
+      "near_edge": [
+        "1103",
+        "1109",
+        "1166",
+        "1145",
+        "1131"
+      ],
+      "near_sub": [
+        "1101",
+        "1137",
+        "1110",
+        "1116",
+        "1117"
+      ],
+      "oltc_bandwidth": 1.3,
+      "oltc_setpoint": 104.0,
+      "xfmr_scale": 1.0
+    },
+    "plot_options": {
+      "lv_comparison": true,
+      "lv_voltages": [
+        "1102",
+        "1154"
+      ],
+      "profile_sel": [
+        "hp_love_Jan"
+      ]
+    },
+    "rand_seed": 0,
+    "rs_pen": 80.0,
+    "slr_pen": 0.0,
+    "solar_dist": "uniform",
+    "solar_dist_params": [
+      1.5,
+      3.5
+    ]
+  },
+  "plots": {
+    "lv_comparison": {
+      "bytes": 47967,
+      "sha256": "1f3336db24ac1342cacdee1abbb1d0a89f6d6824b47b728873200b30d554eb54"
+    },
+    "lv_voltages": {
+      "bytes": 43384,
+      "sha256": "874269b0f3aa8f0928cd539d9185e9a27f8490c393e6637e5e1910807e6a17fd"
+    },
+    "mv_highlevel": {
+      "bytes": 159418,
+      "sha256": "d3393870794a8c84ab60826d155601cfed213b0c0e8340104f7f90c2648fee4a"
+    },
+    "mv_highlevel_clean": {
+      "bytes": 45700,
+      "sha256": "2fde4e8ff8597450b8d6aad1d3335135b0251e8da662826cf2387dfa2bed9cde"
+    },
+    "mv_powers": {
+      "bytes": 111463,
+      "sha256": "aeac99c906ca52121b9c527a2d84d5a4567af7bed34180612106bced2e5f9995"
+    },
+    "mv_voltages": {
+      "bytes": 35014,
+      "sha256": "b979ba90d84483fd09e3ce85b6e1a628a9b72f4e8a5c4bf14671975f0523a0fc"
+    },
+    "pmry_loadings": {
+      "bytes": 31627,
+      "sha256": "dcedcbfcfc78008bb6c18ef42fada949e649e142f17c63b58ed0d5b1eeef5958"
+    },
+    "pmry_powers": {
+      "bytes": 33138,
+      "sha256": "861cfa22f973399de80bbd682611e9a35b05ab1c16e5b4fcd5c1604c7f06c181"
+    },
+    "profile_options": {
+      "bytes": 20991,
+      "sha256": "89aa0a4f734592a84fd2b3326cd3fbe02b380aa4d78a63182a411765559b94ab"
+    },
+    "profile_options_dgs": {
+      "bytes": 6830,
+      "sha256": "af5f14d3fd62d69d2cb06a2b3b06be610e11f8940ad38f151ce0bcabfd6af8f5"
+    },
+    "profile_options_fcs": {
+      "bytes": 6830,
+      "sha256": "af5f14d3fd62d69d2cb06a2b3b06be610e11f8940ad38f151ce0bcabfd6af8f5"
+    },
+    "trn_powers": {
+      "bytes": 54177,
+      "sha256": "a8c400a00a6d0281e2834c0775fbcaf516fee1340b75a4588264d57f441348b1"
+    }
+  },
+  "scenario": {
+    "description": "Rural network, near-substation LV set, base load only",
+    "id": "rural_nearsub_baseload",
+    "params": {
+      "lv_default": "near-sub",
+      "n_id": "1061"
+    }
+  },
+  "status": 200,
+  "url": "http://127.0.0.1:8010/simulate?n_id=1061&lv_default=near-sub"
+}

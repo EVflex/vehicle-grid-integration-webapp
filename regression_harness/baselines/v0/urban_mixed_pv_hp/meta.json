@@ -1,0 +1,175 @@
+{
+  "elapsed_s": 2.147,
+  "parameters": {
+    "dmnd_gen_data": {
+      "dgs": {
+        "lv": null,
+        "mv": [
+          "1106",
+          "1142"
+        ]
+      },
+      "dytm": {
+        "lv": null,
+        "mv": "ic"
+      },
+      "fcs": {
+        "lv": null,
+        "mv": [
+          "1107",
+          "1143"
+        ]
+      },
+      "hps": {
+        "lv": "hps_pen",
+        "mv": "mv"
+      },
+      "ic": {
+        "lv": null,
+        "mv": "not_rs"
+      },
+      "ovnt": {
+        "lv": "ev_pen",
+        "mv": "rs"
+      },
+      "rs": {
+        "lv": "lv",
+        "mv": "rs_pen"
+      },
+      "slr": {
+        "lv": "slr_pen",
+        "mv": "rs"
+      }
+    },
+    "dytm_dist": "uniform",
+    "dytm_dist_params": [
+      0.1,
+      0.2
+    ],
+    "ev_pen": 0.0,
+    "hps_pen": 40.0,
+    "network_data": {
+      "lv_ilist": [
+        0,
+        10,
+        30
+      ],
+      "lv_list": [
+        "1108",
+        "1109",
+        "1151",
+        "1158",
+        "1175"
+      ],
+      "lv_sel": "lv_list",
+      "mixed": [
+        "1108",
+        "1109",
+        "1151",
+        "1158",
+        "1175"
+      ],
+      "n_id": 1060,
+      "n_lv": 5,
+      "near_edge": [
+        "1103",
+        "1109",
+        "1166",
+        "1145",
+        "1131"
+      ],
+      "near_sub": [
+        "1101",
+        "1137",
+        "1110",
+        "1116",
+        "1117"
+      ],
+      "oltc_bandwidth": 1.3,
+      "oltc_setpoint": 104.0,
+      "xfmr_scale": 1.0
+    },
+    "plot_options": {
+      "lv_comparison": true,
+      "lv_voltages": [
+        "1108",
+        "1109"
+      ],
+      "profile_sel": [
+        "hp_love_Jan"
+      ]
+    },
+    "rand_seed": 0,
+    "rs_pen": 80.0,
+    "slr_pen": 60.0,
+    "solar_dist": "uniform",
+    "solar_dist_params": [
+      1.5,
+      3.5
+    ]
+  },
+  "plots": {
+    "lv_comparison": {
+      "bytes": 80858,
+      "sha256": "53eae678665c10ca89f4c7370858ea6d74f4338591d41fa43aab24487ea92652"
+    },
+    "lv_voltages": {
+      "bytes": 80204,
+      "sha256": "acb3fdf767b61a201c8bca52a4626b4bc7dd8542a21751d1de7756c4ef723bd8"
+    },
+    "mv_highlevel": {
+      "bytes": 64803,
+      "sha256": "d261a2a8f54bafa76449dfb91cc5c371372f02e8e22375ab03cde72591966cd9"
+    },
+    "mv_highlevel_clean": {
+      "bytes": 23795,
+      "sha256": "3c26b2d4da1ea827fc260d0b470a730c2a00dd3cd44f134bf4515014d2e8e535"
+    },
+    "mv_powers": {
+      "bytes": 54061,
+      "sha256": "abf01ea239001cfb53eaf5b7f547c3a9409f58f4d8cf87eb0e838d7b2f8682ff"
+    },
+    "mv_voltages": {
+      "bytes": 48915,
+      "sha256": "cd7120576d1592de9e44544633bed2506f1ca6b2c83233d1771628248025fd34"
+    },
+    "pmry_loadings": {
+      "bytes": 58710,
+      "sha256": "b20cbac0aa9a617048a1209262583422f2c6ebd23f29f391684bf897b27e88bf"
+    },
+    "pmry_powers": {
+      "bytes": 57696,
+      "sha256": "6242ac101b6d91981b5294bdef1a77b201a4c6f8e9e53b57ddcab3ae3836b1c4"
+    },
+    "profile_options": {
+      "bytes": 29509,
+      "sha256": "8236a090a357d010a46d5b4768e2d34ce05337fc6490a751b6d8fbe413cece7c"
+    },
+    "profile_options_dgs": {
+      "bytes": 6830,
+      "sha256": "af5f14d3fd62d69d2cb06a2b3b06be610e11f8940ad38f151ce0bcabfd6af8f5"
+    },
+    "profile_options_fcs": {
+      "bytes": 6830,
+      "sha256": "af5f14d3fd62d69d2cb06a2b3b06be610e11f8940ad38f151ce0bcabfd6af8f5"
+    },
+    "trn_powers": {
+      "bytes": 60382,
+      "sha256": "d2d9dc231cf4e92f645aa7ac1de98571242e9c6d1658e4ae55340e8d027e48c7"
+    }
+  },
+  "scenario": {
+    "description": "Urban, mixed LV set, 60% summer PV + 40% cold-weekday heat pumps",
+    "id": "urban_mixed_pv_hp",
+    "params": {
+      "lv_default": "mixed",
+      "lv_hp_pen": "0.4",
+      "lv_hp_profile": "Cold weekday",
+      "lv_pv_pen": "0.6",
+      "lv_pv_profile": "Summer",
+      "n_id": "1060"
+    }
+  },
+  "status": 200,
+  "url": "http://127.0.0.1:8010/simulate?n_id=1060&lv_default=mixed&lv_pv_profile=Summer&lv_pv_pen=0.6&lv_hp_profile=Cold+weekday&lv_hp_pen=0.4"
+}

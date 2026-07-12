@@ -1,0 +1,13 @@
+# Python packages installed by the Azure Functions build (Oryx) alongside the
+# function app.
+#
+# CHANGES (see CHANGES.md at the repository root):
+# - Fixed the malformed "azure - functions" line (spaces made it an invalid
+#   requirement specifier).
+# - Replaced the bundled 2021 dss_python 0.10.7 wheels (x86_64-only, Python
+#   3.8/3.9-only) with the dss-python release from PyPI that vgi_api now pins.
+#   The wheels under dependencies/ are no longer used and can be deleted.
+azure-functions
+
+# The API package itself (installs its dependencies from vgi_api/pyproject.toml)
+../vgi_api

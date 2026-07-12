@@ -1,0 +1,41 @@
+.box-main {
+    border-style: solid;
+    border-width: 1px;
+    border-left-width: 10px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.card-results{
+    border-color: #00897B;
+    background-color: white;
+}
+
+.box-title {
+    margin-bottom: 0.5rem;
+}
+
+.icon-space {
+    padding-right: 0.5rem;
+}
+
+.dark-link {
+    color: var(--dark);
+}
+
+.center-element {
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+    text-align: center;
+}
+
+.logo {
+    object-fit: contain;
+    max-height: 90px;
+}
+
+.logo-main {
+    object-fit: contain;
+    max-height: 70px;
+}

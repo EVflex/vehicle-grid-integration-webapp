@@ -1,0 +1,64 @@
+# CHANGES (see CHANGES.md at the repository root; §12 for the latest round):
+# - python: now 3.10–3.14 (was 3.9–3.11). The old ceiling was the web stack
+#   (fastapi 0.71 / pydantic v1, which do not run on >= 3.13); the pydantic-v2
+#   migration in §12 removed it. Verified end-to-end on 3.11 and 3.14.
+# - pydantic: v1 -> v2, fastapi: 0.71 -> current, uvicorn: 0.16 -> current.
+#   Validators rewritten in vgi_api/validation/validators.py (see the
+#   CHANGE(py3.14) comments there); behaviour is unchanged.
+# - bunch: REMOVED (2011 sdist-only package; its setup.py no longer runs on
+#   python >= 3.11). Replaced by vgi_api/_bunch.py (a 15-line dict subclass).
+# - progress: REMOVED — nothing imports it since the progress-bar-to-logging
+#   change (§3.4).
+# - dss-python 0.15.x: unchanged — its native backend ships abi3 wheels that
+#   already cover new Python versions. Outputs re-validated against the
+#   py3.11 baseline across 6 network configurations x 4 datasets (§12).
+# - python-multipart: >= 0.0.7 fixes CVE-2024-24762 (ReDoS via a crafted
+#   Content-Type header — directly relevant: this API parses multipart
+#   uploads).
+# - poetry.lock: not committed; run `poetry lock` to generate one.
+
+[tool.poetry]
+name = "vgi_api"
+version = "0.3.0"
+description = "The Vehicle Grid Integration API"
+authors = ["Oscar Giles <ogiles@turing.ac.uk>", "Louise Bowler <lbowler@turing.ac.uk>", "David Beavan <dbeavan@turing.ac.uk>", "Pamela Wochner <pwochner@turing.ac.uk>", "Myriam Neaimeh <mneaimeh@turing.ac.uk>", "Matthew Deakin <Matthew.Deakin@newcastle.ac.uk>"]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.15"
+# CHANGE(py3.14): cmocean 2.x uses np.unicode_, removed in numpy 2.
+cmocean = ">=3.0.3"
+govuk-bank-holidays = ">=0.10"
+hsluv = "^5.0.2"
+matplotlib = "^3.5.0"
+numpy = ">=1.20"
+scipy = ">=1.7.2"
+fastapi = ">=0.115"
+python-multipart = ">=0.0.9"
+pydantic = "^2.9"
+uvicorn = ">=0.30"
+dss-python = ">=0.15.7,<0.16"
+
+[tool.poetry.scripts]
+azure_mockup = "vgi_api.azure_mockup:run_dss_simulation"
+
+
+# CHANGE(py3.14): pytest 6 / black 21 / devtools 0.8 predate modern Python;
+# httpx is required by fastapi's TestClient (which is httpx-based now).
+# The legacy [tool.poetry.dev-dependencies] table name became the dev group.
+[tool.poetry.group.dev.dependencies]
+httpie = ">=3.2"
+black = ">=24.0"
+pytest = "^8.0"
+devtools = ">=0.12"
+httpx = ">=0.27"
+
+[tool.pytest.ini_options]
+# `scripts` (the topology builder) lives at the project root next to `vgi_api`.
+pythonpath = ["."]
+markers = [
+    "slow: engine-backed cross-checks; deselect with -m 'not slow'",
+]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

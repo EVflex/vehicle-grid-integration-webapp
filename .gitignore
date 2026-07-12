@@ -1,0 +1,40 @@
+.DS_Store
+node_modules
+/dist
+
+# python stuff
+*.pyc
+*__pycache__
+# local env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.idea
+
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+.venv
+.vscode
+
+*.env
+
+# Never commit publish_profile
+*publish_profile.publishsettings
+package-lock.json
+package.json
+
+# Terraform state
+*.tfstate
+*.tfstate.backup
+*.lock.hcl
+*.terraform*.pdf

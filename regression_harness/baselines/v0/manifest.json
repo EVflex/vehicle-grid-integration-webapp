@@ -1,0 +1,113 @@
+{
+  "captured_at": "2026-07-07 15:06:20 +0300",
+  "harness_version": "1.0",
+  "label": "v0 reference (dss-python 0.12.1, numpy 1.23.5, py3.10)",
+  "scenarios": [
+    {
+      "description": "Urban network, near-substation LV set, base load only",
+      "id": "urban_nearsub_baseload",
+      "params": {
+        "lv_default": "near-sub",
+        "n_id": "1060"
+      }
+    },
+    {
+      "description": "Urban, near-edge LV set, 50% EVs (3.6 kW), Crest smart meters",
+      "id": "urban_nearedge_ev",
+      "params": {
+        "lv_default": "near-edge",
+        "lv_ev_pen": "0.5",
+        "lv_ev_profile": "Crowdcharge\u20143.6kW",
+        "lv_smart_meter_profile": "Crest",
+        "n_id": "1060"
+      }
+    },
+    {
+      "description": "Urban, mixed LV set, 60% summer PV + 40% cold-weekday heat pumps",
+      "id": "urban_mixed_pv_hp",
+      "params": {
+        "lv_default": "mixed",
+        "lv_hp_pen": "0.4",
+        "lv_hp_profile": "Cold weekday",
+        "lv_pv_pen": "0.6",
+        "lv_pv_profile": "Summer",
+        "n_id": "1060"
+      }
+    },
+    {
+      "description": "Urban, explicit LV list + plot list, EV+PV+HP together, non-default transformer scale, OLTC setpoint and bandwidth",
+      "id": "urban_lvlist_all_lcts_xfmr_oltc",
+      "params": {
+        "lv_ev_pen": "0.8",
+        "lv_ev_profile": "Crowdcharge\u20147kW",
+        "lv_hp_pen": "0.6",
+        "lv_hp_profile": "Mild weekend",
+        "lv_list": "1101,1105,1103",
+        "lv_plot_list": "1101,1103",
+        "lv_pv_pen": "0.3",
+        "lv_pv_profile": "Winter",
+        "n_id": "1060",
+        "oltc_bandwidth": "0.02",
+        "oltc_setpoint": "1.06",
+        "rs_pen": "0.9",
+        "xfmr_scale": "1.5"
+      }
+    },
+    {
+      "description": "Urban, near-sub, MV solar plant (summer) + MV fast-charging stations",
+      "id": "urban_mv_solar_fcs",
+      "params": {
+        "lv_default": "near-sub",
+        "mv_fcs_profile": "FC Stations",
+        "mv_solar_pv_profile": "Solar Plant Summer",
+        "n_id": "1060"
+      }
+    },
+    {
+      "description": "Rural network, near-substation LV set, base load only",
+      "id": "rural_nearsub_baseload",
+      "params": {
+        "lv_default": "near-sub",
+        "n_id": "1061"
+      }
+    },
+    {
+      "description": "Rural, mixed LV set, 80% EVs (7 kW) + 50% mild-weekend heat pumps",
+      "id": "rural_mixed_ev_hp",
+      "params": {
+        "lv_default": "mixed",
+        "lv_ev_pen": "0.8",
+        "lv_ev_profile": "Crowdcharge\u20147kW",
+        "lv_hp_pen": "0.5",
+        "lv_hp_profile": "Mild weekend",
+        "n_id": "1061"
+      }
+    },
+    {
+      "description": "Urban, near-sub, user-uploaded smart-meter and MV-solar CSV profiles",
+      "files": {
+        "lv_smart_meter_csv": {
+          "filename": "smart_meter.csv",
+          "profiles": 3,
+          "scale": 1.2
+        },
+        "mv_solar_pv_csv": {
+          "filename": "mv_solar.csv",
+          "profiles": 2,
+          "scale": 800.0
+        }
+      },
+      "id": "urban_csv_uploads",
+      "params": {
+        "lv_default": "near-sub",
+        "lv_smart_meter_profile": "csv",
+        "lv_smart_meter_profile_units": "kW",
+        "mv_solar_pv_profile": "csv",
+        "mv_solar_pv_profile_units": "kW",
+        "n_id": "1060"
+      }
+    }
+  ],
+  "timeout_s": 600.0,
+  "url": "http://127.0.0.1:8010"
+}

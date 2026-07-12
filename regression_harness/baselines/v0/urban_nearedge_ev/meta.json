@@ -1,0 +1,174 @@
+{
+  "elapsed_s": 1.984,
+  "parameters": {
+    "dmnd_gen_data": {
+      "dgs": {
+        "lv": null,
+        "mv": [
+          "1106",
+          "1142"
+        ]
+      },
+      "dytm": {
+        "lv": null,
+        "mv": "ic"
+      },
+      "fcs": {
+        "lv": null,
+        "mv": [
+          "1107",
+          "1143"
+        ]
+      },
+      "hps": {
+        "lv": "hps_pen",
+        "mv": "mv"
+      },
+      "ic": {
+        "lv": null,
+        "mv": "not_rs"
+      },
+      "ovnt": {
+        "lv": "ev_pen",
+        "mv": "rs"
+      },
+      "rs": {
+        "lv": "lv",
+        "mv": "rs_pen"
+      },
+      "slr": {
+        "lv": "slr_pen",
+        "mv": "rs"
+      }
+    },
+    "dytm_dist": "uniform",
+    "dytm_dist_params": [
+      0.1,
+      0.2
+    ],
+    "ev_pen": 50.0,
+    "hps_pen": 0.0,
+    "network_data": {
+      "lv_ilist": [
+        0,
+        10,
+        30
+      ],
+      "lv_list": [
+        "1103",
+        "1109",
+        "1166",
+        "1145",
+        "1131"
+      ],
+      "lv_sel": "lv_list",
+      "mixed": [
+        "1108",
+        "1109",
+        "1151",
+        "1158",
+        "1175"
+      ],
+      "n_id": 1060,
+      "n_lv": 5,
+      "near_edge": [
+        "1103",
+        "1109",
+        "1166",
+        "1145",
+        "1131"
+      ],
+      "near_sub": [
+        "1101",
+        "1137",
+        "1110",
+        "1116",
+        "1117"
+      ],
+      "oltc_bandwidth": 1.3,
+      "oltc_setpoint": 104.0,
+      "xfmr_scale": 1.0
+    },
+    "plot_options": {
+      "lv_comparison": true,
+      "lv_voltages": [
+        "1103",
+        "1109"
+      ],
+      "profile_sel": [
+        "hp_love_Jan"
+      ]
+    },
+    "rand_seed": 0,
+    "rs_pen": 80.0,
+    "slr_pen": 0.0,
+    "solar_dist": "uniform",
+    "solar_dist_params": [
+      1.5,
+      3.5
+    ]
+  },
+  "plots": {
+    "lv_comparison": {
+      "bytes": 89834,
+      "sha256": "34037064b24d71ffecbce2367811e138e6c5ed8422b8b7eb5a8f1bfac7372547"
+    },
+    "lv_voltages": {
+      "bytes": 86701,
+      "sha256": "2f8f4275dcd11f8833dbdb1b48697e9eb4715a908186d53be104d36fee6a3a84"
+    },
+    "mv_highlevel": {
+      "bytes": 63457,
+      "sha256": "b58746992bc8abe64fd1a24b31bba87af04d9e83ed506fefef2d38204b2ff0a7"
+    },
+    "mv_highlevel_clean": {
+      "bytes": 24017,
+      "sha256": "87a9bd60315946f1acb7d6cc7cf901afcd0126e4412dd2bfb8a435c34b7dd499"
+    },
+    "mv_powers": {
+      "bytes": 53797,
+      "sha256": "391883264f684b4eed95f37385a30872b304f46c611ff0f22d88e5060fa050ce"
+    },
+    "mv_voltages": {
+      "bytes": 45552,
+      "sha256": "181a1ffb45e854364b7efa52eabbcfdc211c93e87b3382791498e9289d9f3c81"
+    },
+    "pmry_loadings": {
+      "bytes": 56007,
+      "sha256": "147a34178bc7c180e89a27aa892b3cb1d0d05c400dab6637daf2ecd2552eaf95"
+    },
+    "pmry_powers": {
+      "bytes": 58611,
+      "sha256": "4ef19257aea4680757bb917f1d5a23b4e67e5c5d4ffc4a071449d357c90541c8"
+    },
+    "profile_options": {
+      "bytes": 32132,
+      "sha256": "cae25f645c499e65d97c62e954913284a5874b2d7a7b63f599b2906e9a4c47d1"
+    },
+    "profile_options_dgs": {
+      "bytes": 6830,
+      "sha256": "af5f14d3fd62d69d2cb06a2b3b06be610e11f8940ad38f151ce0bcabfd6af8f5"
+    },
+    "profile_options_fcs": {
+      "bytes": 6830,
+      "sha256": "af5f14d3fd62d69d2cb06a2b3b06be610e11f8940ad38f151ce0bcabfd6af8f5"
+    },
+    "trn_powers": {
+      "bytes": 55343,
+      "sha256": "1c0982c4344d72f2af936e0c5fdc73a714663b105db2a368e6427c81d13d43e1"
+    }
+  },
+  "scenario": {
+    "description": "Urban, near-edge LV set, 50% EVs (3.6 kW), Crest smart meters",
+    "id": "urban_nearedge_ev",
+    "params": {
+      "lv_default": "near-edge",
+      "lv_ev_pen": "0.5",
+      "lv_ev_profile": "Crowdcharge\u20143.6kW",
+      "lv_smart_meter_profile": "Crest",
+      "n_id": "1060"
+    }
+  },
+  "status": 200,
+  "url": "http://127.0.0.1:8010/simulate?n_id=1060&lv_default=near-edge&lv_smart_meter_profile=Crest&lv_ev_profile=Crowdcharge%E2%80%943.6kW&lv_ev_pen=0.5"
+}

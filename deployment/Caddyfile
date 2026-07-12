@@ -1,0 +1,70 @@
+# NEW (2026-07-06, see CHANGES.md §13). Caddy config: HTTPS is automatic
+# (Let's Encrypt) for every hostname below once DNS points at this server.
+
+{
+	email {$ACME_EMAIL}
+	# rate_limit is a compiled-in plugin (see web.dockerfile), so Caddy needs
+	# telling where it sits in the middleware chain.
+	order rate_limit before reverse_proxy
+}
+
+# Canonical hostname is the bare domain; www redirects to it.
+www.{$DOMAIN} {
+	redir https://{$DOMAIN}{uri} permanent
+}
+
+# ---------------------------------------------------------------------------
+# Frontend: the compiled Vue app (static files baked into this image).
+# ---------------------------------------------------------------------------
+{$DOMAIN} {
+	root * /srv
+	encode zstd gzip
+
+	# Vue Router uses HTML5 history mode: unknown paths (e.g. /simulate-network)
+	# must fall back to index.html so the client-side router can handle them.
+	try_files {path} /index.html
+	file_server
+
+	# Build outputs carry content hashes in their filenames — cache forever.
+	@hashed path /js/* /css/* /img/* /fonts/*
+	header @hashed Cache-Control "public, max-age=31536000, immutable"
+
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "strict-origin-when-cross-origin"
+	}
+}
+
+# ---------------------------------------------------------------------------
+# API: reverse proxy to the FastAPI container.
+# The frontend needs the API on its own origin (it builds URLs with absolute
+# paths against VUE_APP_API_URL), hence the subdomain rather than /api/*.
+# ---------------------------------------------------------------------------
+api.{$DOMAIN} {
+	encode zstd gzip
+	log
+
+	# The API itself caps CSV uploads at 5 MB; reject oversized bodies before
+	# they reach Python at all.
+	request_body {
+		max_size 10MB
+	}
+
+	# The API is anonymous and one simulation costs ~1-2 s of CPU. Per-IP
+	# rate limit (HTTP 429 beyond it) is the abuse brake in place of auth.
+	rate_limit {
+		zone simulate {
+			match {
+				method POST
+				path /simulate
+			}
+			key {client_ip}
+			events 10
+			window 1m
+		}
+	}
+
+	reverse_proxy api:80
+}

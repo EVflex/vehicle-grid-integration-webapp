@@ -1,0 +1,43 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "event-v2-dev",
+      "autoPort": true,
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-c",
+        "cd /Users/myriam/Downloads/vehicle-grid-integration-webapp-features/event-frontend-v2 && NODE_OPTIONS=--openssl-legacy-provider npx vue-cli-service serve"
+      ],
+      "port": 8080
+    },
+    {
+      "name": "event-v2-mock",
+      "autoPort": true,
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-c",
+        "cd /Users/myriam/Downloads/vehicle-grid-integration-webapp-features/event-frontend-v2 && VGI_API_TARGET=http://127.0.0.1:8010 NODE_OPTIONS=--openssl-legacy-provider npx vue-cli-service serve"
+      ],
+      "port": 8080
+    },
+    {
+      "name": "backend",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-c",
+        "cd /Users/myriam/Downloads/vehicle-grid-integration-webapp-features && VGI_CORS_ORIGINS='http://localhost:8081,http://127.0.0.1:8081,http://localhost:8080,http://127.0.0.1:8080' vgi_api/.venv/bin/uvicorn vgi_api.main:app --app-dir vgi_api --port 8000"
+      ],
+      "port": 8000
+    },
+    {
+      "name": "old-frontend",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-c",
+        "cd /Users/myriam/Downloads/vehicle-grid-integration-webapp-features && NODE_OPTIONS=--openssl-legacy-provider npx vue-cli-service serve --port 8081"
+      ],
+      "port": 8081
+    }
+  ]
+}

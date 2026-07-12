@@ -1,0 +1,187 @@
+{
+  "elapsed_s": 2.484,
+  "parameters": {
+    "dmnd_gen_data": {
+      "dgs": {
+        "lv": null,
+        "mv": [
+          "1106",
+          "1142"
+        ]
+      },
+      "dytm": {
+        "lv": null,
+        "mv": "ic"
+      },
+      "fcs": {
+        "lv": null,
+        "mv": [
+          "1107",
+          "1143"
+        ]
+      },
+      "hps": {
+        "lv": "hps_pen",
+        "mv": "mv"
+      },
+      "ic": {
+        "lv": null,
+        "mv": "not_rs"
+      },
+      "ovnt": {
+        "lv": "ev_pen",
+        "mv": "rs"
+      },
+      "rs": {
+        "lv": "lv",
+        "mv": "rs_pen"
+      },
+      "slr": {
+        "lv": "slr_pen",
+        "mv": "rs"
+      }
+    },
+    "dytm_dist": "uniform",
+    "dytm_dist_params": [
+      0.1,
+      0.2
+    ],
+    "ev_pen": 0.0,
+    "hps_pen": 0.0,
+    "network_data": {
+      "lv_ilist": [
+        0,
+        10,
+        30
+      ],
+      "lv_list": [
+        "1101",
+        "1137",
+        "1110",
+        "1116",
+        "1117"
+      ],
+      "lv_sel": "lv_list",
+      "mixed": [
+        "1108",
+        "1109",
+        "1151",
+        "1158",
+        "1175"
+      ],
+      "n_id": 1060,
+      "n_lv": 5,
+      "near_edge": [
+        "1103",
+        "1109",
+        "1166",
+        "1145",
+        "1131"
+      ],
+      "near_sub": [
+        "1101",
+        "1137",
+        "1110",
+        "1116",
+        "1117"
+      ],
+      "oltc_bandwidth": 1.3,
+      "oltc_setpoint": 104.0,
+      "xfmr_scale": 1.0
+    },
+    "plot_options": {
+      "lv_comparison": true,
+      "lv_voltages": [
+        "1101",
+        "1137"
+      ],
+      "profile_sel": [
+        "hp_love_Jan"
+      ]
+    },
+    "rand_seed": 0,
+    "rs_pen": 80.0,
+    "slr_pen": 0.0,
+    "solar_dist": "uniform",
+    "solar_dist_params": [
+      1.5,
+      3.5
+    ]
+  },
+  "plots": {
+    "lv_comparison": {
+      "bytes": 65516,
+      "sha256": "23fd79f2d04f663282a839570bda58393c386441b25e6da904f3bc61be3fc0b6"
+    },
+    "lv_voltages": {
+      "bytes": 57511,
+      "sha256": "17ed4146373aef11f375cc8b58b0242bb42fa8b88540426b124c209ab6ac9bf5"
+    },
+    "mv_highlevel": {
+      "bytes": 63339,
+      "sha256": "9cc7b3b237ef613cf610b63292674ba02822429844a3d98ed15a9ef6bd4a53c6"
+    },
+    "mv_highlevel_clean": {
+      "bytes": 23977,
+      "sha256": "bd293ece910ac10e16355f9c202ce61d39bee7ebdb38ae44addaadb7d58b7d14"
+    },
+    "mv_powers": {
+      "bytes": 53646,
+      "sha256": "258f150a11fadd0ba82c1ccdddf3aba2c25c0b5860a81ddd16f87f7af5c45af4"
+    },
+    "mv_voltages": {
+      "bytes": 35550,
+      "sha256": "4ab9029b31bee17860599d399419e9b4d7f75d1125d951f37595204164aa02fa"
+    },
+    "pmry_loadings": {
+      "bytes": 47787,
+      "sha256": "df3b8f95b834ddac2d6c2109e399ad9345a685d16b58639ff82cf5814e1618e9"
+    },
+    "pmry_powers": {
+      "bytes": 60804,
+      "sha256": "54054d89a3c28ab4d2e2fd75dc549ffdc3554f2f1c3f353aae4ba7d42eb50b31"
+    },
+    "profile_options": {
+      "bytes": 21686,
+      "sha256": "7ac308fb41fabbe6cc667565b416395cf795f2092ce9b311483dc232d685174f"
+    },
+    "profile_options_dgs": {
+      "bytes": 22416,
+      "sha256": "f69f4a010d67be8643a57be17bb7cb13621ca254c2bceb53754e45da654b16ed"
+    },
+    "profile_options_fcs": {
+      "bytes": 6830,
+      "sha256": "af5f14d3fd62d69d2cb06a2b3b06be610e11f8940ad38f151ce0bcabfd6af8f5"
+    },
+    "trn_powers": {
+      "bytes": 43080,
+      "sha256": "ca93d1dc9755dfc50c2ac47ac064b575ccf4a951527f3bdf9f65704e6a131431"
+    }
+  },
+  "scenario": {
+    "description": "Urban, near-sub, user-uploaded smart-meter and MV-solar CSV profiles",
+    "files": {
+      "lv_smart_meter_csv": {
+        "filename": "smart_meter.csv",
+        "profiles": 3,
+        "scale": 1.2
+      },
+      "mv_solar_pv_csv": {
+        "filename": "mv_solar.csv",
+        "profiles": 2,
+        "scale": 800.0
+      }
+    },
+    "id": "urban_csv_uploads",
+    "params": {
+      "lv_default": "near-sub",
+      "lv_smart_meter_profile": "csv",
+      "lv_smart_meter_profile_units": "kW",
+      "mv_solar_pv_profile": "csv",
+      "mv_solar_pv_profile_units": "kW",
+      "n_id": "1060"
+    }
+  },
+  "status": 200,
+  "url": "http://127.0.0.1:8010/simulate?n_id=1060&lv_default=near-sub&lv_smart_meter_profile=csv&lv_smart_meter_profile_units=kW&mv_solar_pv_profile=csv&mv_solar_pv_profile_units=kW"
+}

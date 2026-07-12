@@ -1,0 +1,175 @@
+{
+  "elapsed_s": 2.934,
+  "parameters": {
+    "dmnd_gen_data": {
+      "dgs": {
+        "lv": null,
+        "mv": [
+          "1106",
+          "1142"
+        ]
+      },
+      "dytm": {
+        "lv": null,
+        "mv": "ic"
+      },
+      "fcs": {
+        "lv": null,
+        "mv": [
+          "1107",
+          "1143"
+        ]
+      },
+      "hps": {
+        "lv": "hps_pen",
+        "mv": "mv"
+      },
+      "ic": {
+        "lv": null,
+        "mv": "not_rs"
+      },
+      "ovnt": {
+        "lv": "ev_pen",
+        "mv": "rs"
+      },
+      "rs": {
+        "lv": "lv",
+        "mv": "rs_pen"
+      },
+      "slr": {
+        "lv": "slr_pen",
+        "mv": "rs"
+      }
+    },
+    "dytm_dist": "uniform",
+    "dytm_dist_params": [
+      0.1,
+      0.2
+    ],
+    "ev_pen": 80.0,
+    "hps_pen": 50.0,
+    "network_data": {
+      "lv_ilist": [
+        0,
+        10,
+        30
+      ],
+      "lv_list": [
+        "1101",
+        "1450",
+        "1152",
+        "1200",
+        "1122"
+      ],
+      "lv_sel": "lv_list",
+      "mixed": [
+        "1108",
+        "1109",
+        "1151",
+        "1158",
+        "1175"
+      ],
+      "n_id": 1061,
+      "n_lv": 5,
+      "near_edge": [
+        "1103",
+        "1109",
+        "1166",
+        "1145",
+        "1131"
+      ],
+      "near_sub": [
+        "1101",
+        "1137",
+        "1110",
+        "1116",
+        "1117"
+      ],
+      "oltc_bandwidth": 1.3,
+      "oltc_setpoint": 104.0,
+      "xfmr_scale": 1.0
+    },
+    "plot_options": {
+      "lv_comparison": true,
+      "lv_voltages": [
+        "1101",
+        "1450"
+      ],
+      "profile_sel": [
+        "hp_love_Jan"
+      ]
+    },
+    "rand_seed": 0,
+    "rs_pen": 80.0,
+    "slr_pen": 0.0,
+    "solar_dist": "uniform",
+    "solar_dist_params": [
+      1.5,
+      3.5
+    ]
+  },
+  "plots": {
+    "lv_comparison": {
+      "bytes": 63088,
+      "sha256": "539bb681be61073efc3ea6818fee639b0192efb1617d32e430153e0dbb6efba3"
+    },
+    "lv_voltages": {
+      "bytes": 82143,
+      "sha256": "86f7bf134ea4f648f21bc0d64336ea78fee386f4960e0d461cb7cd819024a14e"
+    },
+    "mv_highlevel": {
+      "bytes": 157648,
+      "sha256": "ea68e13c91709fd2558dcbda39a1792ec79b50281f5fc7c04b118abd8775b8ce"
+    },
+    "mv_highlevel_clean": {
+      "bytes": 46021,
+      "sha256": "208114efe8d921292cd3ef018ea8dbfc6e74bdea6518a81fbc977fa58f79799a"
+    },
+    "mv_powers": {
+      "bytes": 112278,
+      "sha256": "fc1502dbb739974a069393a55c335a97116c5e533706b6ac443aeb1071a725b7"
+    },
+    "mv_voltages": {
+      "bytes": 58200,
+      "sha256": "3cba08b8ead8c8b903df546dbbbe4e3148e245f15557e93421cac665b6e0aece"
+    },
+    "pmry_loadings": {
+      "bytes": 39731,
+      "sha256": "b24d579a8df491e06b99a022f9207eee35f86bcf1666be0860961ed6883a9d1e"
+    },
+    "pmry_powers": {
+      "bytes": 40276,
+      "sha256": "78523217ab8b2fc2f0829ef5f27c92ef8fc7c9471ff336752e60bc0e98092158"
+    },
+    "profile_options": {
+      "bytes": 37903,
+      "sha256": "fcb6cce8e85159ec79c3ba130ba1b70f3e643b358841f5b30b418229ebc99fcf"
+    },
+    "profile_options_dgs": {
+      "bytes": 6830,
+      "sha256": "af5f14d3fd62d69d2cb06a2b3b06be610e11f8940ad38f151ce0bcabfd6af8f5"
+    },
+    "profile_options_fcs": {
+      "bytes": 6830,
+      "sha256": "af5f14d3fd62d69d2cb06a2b3b06be610e11f8940ad38f151ce0bcabfd6af8f5"
+    },
+    "trn_powers": {
+      "bytes": 61755,
+      "sha256": "63709b1a56ad79aad154d0f00be7f22a369478e8646a6d8499e5e3367a5cbc8d"
+    }
+  },
+  "scenario": {
+    "description": "Rural, mixed LV set, 80% EVs (7 kW) + 50% mild-weekend heat pumps",
+    "id": "rural_mixed_ev_hp",
+    "params": {
+      "lv_default": "mixed",
+      "lv_ev_pen": "0.8",
+      "lv_ev_profile": "Crowdcharge\u20147kW",
+      "lv_hp_pen": "0.5",
+      "lv_hp_profile": "Mild weekend",
+      "n_id": "1061"
+    }
+  },
+  "status": 200,
+  "url": "http://127.0.0.1:8010/simulate?n_id=1061&lv_default=mixed&lv_ev_profile=Crowdcharge%E2%80%947kW&lv_ev_pen=0.8&lv_hp_profile=Mild+weekend&lv_hp_pen=0.5"
+}
