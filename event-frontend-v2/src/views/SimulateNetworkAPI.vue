@@ -1819,13 +1819,20 @@ export default {
   line-height: 1.4;
 }
 
+/* Partner logos are full-colour brand marks (dark wordmarks, transparent
+   PNGs) that cannot be recoloured with the theme, so they sit on a white
+   plinth in BOTH themes — otherwise they vanish against the dark paper. */
 .evt-logos {
   display: flex;
   flex-wrap: wrap;
-  gap: 24px;
+  gap: 24px 40px;
   justify-content: center;
   align-items: center;
   margin: 32px 0 12px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 18px 28px;
 }
 .evt-logos .logo {
   max-height: 64px;

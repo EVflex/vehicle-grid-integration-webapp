@@ -93,9 +93,9 @@
               @click="onNodeClick(n)"
               @keydown.enter.prevent="onNodeClick(n)"
               @keydown.space.prevent="onNodeClick(n)"
-              @mouseenter="hovered = n.id"
+              @mouseenter="setActive(n.id)"
               @mouseleave="hovered === n.id && (hovered = null)"
-              @focus="hovered = n.id"
+              @focus="setActive(n.id)"
             />
           </g>
           <!-- CHANGE(round2-6): primary feeder labels (F1, F2, …) render
@@ -148,7 +148,10 @@ export default {
     // CHANGE(round3): viewBox height 320 -> 460 — a taller map (the width
     // already spans the full card) so the diagram, node spacing and feeder
     // labels all render larger.
-    return { VW: 1000, VH: 460, hovered: null };
+    // lastId (round4): the most recently hovered/focused/clicked node — the
+    // caption strip keeps showing its details after the pointer leaves, so
+    // the text doesn't flash back to the hint between nodes.
+    return { VW: 1000, VH: 460, hovered: null, lastId: null };
   },
   computed: {
     // Data-space -> viewBox projection, recomputed from the MV bus bounds so
@@ -386,7 +389,9 @@ export default {
     // (hovered/focused/selected) node — either the existing reserved-host
     // explanation, or the restored plain-language network details.
     activeDetail() {
-      const id = this.hovered;
+      // Live hover wins; otherwise fall back to the last hovered/clicked
+      // node so the caption stays put between interactions (round4).
+      const id = this.hovered != null ? this.hovered : this.lastId;
       if (id == null) return null;
       if (this.isSolarHost(id))
         return {
@@ -402,6 +407,10 @@ export default {
     }
   },
   methods: {
+    setActive(id) {
+      this.hovered = id;
+      this.lastId = id;
+    },
     isSelected(id) {
       return this.selected.includes(Number(id));
     },
@@ -476,7 +485,7 @@ export default {
       // Also mark it "active" so the detail strip updates immediately on
       // click even on touch devices, where a tap doesn't reliably carry
       // focus the way it does on desktop.
-      this.hovered = n.id;
+      this.setActive(n.id);
       this.$emit("toggle", n.id);
     }
   }
@@ -624,19 +633,19 @@ export default {
   margin-left: auto;
   font-style: italic;
 }
-/* CHANGE(round2-5): fixed-height caption strip above the map (restores the
-   per-network details removed in §20, without shrinking the map — see the
-   component doc comment). A fixed height + always-on border/background means
-   the layout never jumps between the neutral hint and an active caption. */
+/* CHANGE(round4): the caption strip must NEVER change height, or the map
+   below it bounces on every hover/click (the round-2 min-height reservation
+   was silently defeated by the global box-sizing: border-box — 2.5em minus
+   14px of padding+border only covered ONE line, so two-line captions grew
+   the strip by a line). Hard height = clamped lines × line-height plus the
+   14px of padding (12) + border (2), so hint and caption render identically
+   tall and the map never moves. */
 .nx-detail {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  min-height: 2.5em;
-  /* round3: the caption gained the feeder/household split, so it can run
-     longer — the clamp below is relaxed on narrow screens (media query at
-     the end of this block). */
+  height: calc(2 * 1.25em + 14px);
   margin: 0 0 8px;
   padding: 6px 10px;
   border: 1px solid var(--line, #d9e0e8);
@@ -649,12 +658,12 @@ export default {
 .nx-detail-on {
   color: var(--ink, #22303c);
 }
-/* round3: on narrow screens the richer caption needs more lines; reserving
-   the space keeps the map from jumping when a node is hovered. */
+/* On narrow screens the richer caption needs more lines; the height stays
+   hard-set (same formula, 4 lines) so the map still never moves. */
 @media (max-width: 560px) {
   .nx-detail {
     -webkit-line-clamp: 4;
-    min-height: 5em;
+    height: calc(4 * 1.25em + 14px);
   }
 }
 </style>
