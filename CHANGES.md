@@ -914,6 +914,35 @@ explanation for a solar/FCS host; 0 console errors; lint clean (one
 pre-existing warning in dev-mock-api.js). A new `event-v2-mock` launch
 config runs the front end against the mock on port 8010.
 
+## 23. Map jiggle fix + dark-mode logos (2026-07-12)
+`event-frontend-v2/src/components/NetworkExplorer.vue`,
+`event-frontend-v2/src/views/SimulateNetworkAPI.vue`. Marked
+`CHANGE(round4)` in-file.
+
+- **The map no longer moves when hovering/clicking nodes.** The §21
+  fixed-height caption strip was silently defeated by the app-wide
+  `box-sizing: border-box`: its `min-height: 2.5em` had the 12 px padding
+  + 2 px border deducted from it, so it only actually reserved ONE text
+  line — every two-line caption grew the strip by ~14 px and bounced the
+  map (and everything below it) on every hover in/out. The strip now has a
+  hard `height: calc(2 * 1.25em + 14px)` (clamped lines × line-height plus
+  padding + border; 4-line variant ≤ 560 px), verified constant to the
+  sub-pixel across idle/hover/leave/click.
+- **The caption is sticky.** Leaving a node used to snap the strip back to
+  the "Hover a network for details." hint, so the text flip-flopped as the
+  pointer crossed the map. The strip now keeps showing the most recently
+  hovered/focused/clicked network (new `lastId`; live hover still wins);
+  the hint only shows before the first interaction.
+- **Partner logos legible in dark mode.** The Turing/Newcastle/Supergen/LRF
+  marks are full-colour brand assets with dark wordmarks on transparent
+  PNGs — invisible on the dark paper. The logo strip now sits on a white
+  plinth card (both themes; brand marks must not be recoloured).
+
+Verified in the browser against the mock API: map SVG top measured
+identical (590.914 px) across idle → hover → leave → click; caption strip
+height constant at 45.2 px in every state (previously 31 ↔ 45 px); logos
+screenshot-checked in dark and light schemes; 0 console errors.
+
 ## 24. Native interactive results charts, phase 1 (2026-07-12)
 `event-frontend-v2/src/components/charts/*` (new),
 `event-frontend-v2/src/views/SimulateNetworkAPI.vue`. Marked P5 in-file.
