@@ -115,3 +115,24 @@ export function prettyVufName(h) {
   const m = /LV\s*Network:?\s*(\d+)/i.exec(h);
   return m ? `LV ${m[1]}` : h;
 }
+
+/**
+ * lv_phase_data[net]: "Phase <n> mean|min|max" columns (phases a network
+ * doesn't have are absent). -> [{phase, mean, lo, hi}, ...]
+ */
+export function phaseBands(parsed) {
+  if (!parsed) return null;
+  const phases = {};
+  parsed.header.forEach((h, ci) => {
+    const m = /Phase\s*(\d)\s*(mean|min|max)/i.exec(h);
+    if (!m) return;
+    (phases[m[1]] = phases[m[1]] || {})[m[2].toLowerCase()] = column(
+      parsed.rows,
+      ci
+    );
+  });
+  const bands = Object.entries(phases)
+    .filter(([, o]) => o.mean && o.min && o.max)
+    .map(([phase, o]) => ({ phase, mean: o.mean, lo: o.min, hi: o.max }));
+  return bands.length ? bands : null;
+}

@@ -450,9 +450,9 @@
                       />
                     </span>
                     <a
-                      v-if="fig.data_url"
-                      :href="fig.data_url"
-                      :download="fig.data_filename"
+                      v-if="figDataUrl(fig)"
+                      :href="figDataUrl(fig)"
+                      :download="figDataName(fig)"
                       class="evt-csv-link"
                     >
                       <i class="bi bi-download"></i> csv
@@ -493,7 +493,9 @@
                     :decimals="fig.chart.decimals"
                     :height="280"
                   />
-                  <!-- Per-phase figure: user picks which LV network to show. -->
+                  <!-- Per-phase figure: user picks which LV network to show.
+                       Native chart when that network's band CSV parsed,
+                       matplotlib image otherwise (older API deployments). -->
                   <template v-else-if="fig.phaseSelector">
                     <label class="evt-phase-select">
                       LV network
@@ -503,8 +505,16 @@
                         </option>
                       </select>
                     </label>
+                    <phase-band-chart
+                      v-if="phaseNet && phaseChartBands[phaseNet]"
+                      :key="phaseNet"
+                      :bands="phaseChartBands[phaseNet]"
+                      :limits="fig.chart.limits"
+                      :failed-hours="fig.chart.failedHours"
+                      :height="280"
+                    />
                     <img
-                      v-if="phaseNet && phasePngs[phaseNet]"
+                      v-else-if="phaseNet && phasePngs[phaseNet]"
                       :src="'data:image/jpeg;base64,' + phasePngs[phaseNet]"
                       :alt="
                         'Per-phase customer voltages for LV network ' + phaseNet
@@ -643,13 +653,15 @@ import InputDetails from "../components/InputDetails.vue";
 import NetworkExplorer from "../components/NetworkExplorer.vue";
 import QuantileBandChart from "../components/charts/QuantileBandChart.vue";
 import MultiLineChart from "../components/charts/MultiLineChart.vue";
+import PhaseBandChart from "../components/charts/PhaseBandChart.vue";
 import {
   parseFigureCsv,
   lvQuantilePanels,
   mvQuantiles,
   lineSeries,
   prettyTransformerName,
-  prettyVufName
+  prettyVufName,
+  phaseBands
 } from "../components/charts/figureSeries.js";
 import useVuelidate from "@vuelidate/core";
 import {
@@ -715,7 +727,8 @@ export default {
     InputDetails,
     NetworkExplorer,
     QuantileBandChart,
-    MultiLineChart
+    MultiLineChart,
+    PhaseBandChart
   },
   setup() {
     return { v$: useVuelidate({ $autoDirty: true }) };
@@ -772,6 +785,10 @@ export default {
       topology: null,
       // Per-phase figures keyed by LV network id, plus the currently shown id.
       phasePngs: {},
+      // Parsed per-phase band data + CSV download URLs, keyed the same way
+      // (empty on older API deployments → the PNG is shown instead).
+      phaseChartBands: {},
+      phaseCsvUrls: {},
       phaseNet: null
     };
   },
@@ -1055,6 +1072,19 @@ export default {
       }
     },
 
+    // The per-phase figure's csv link follows the network picker; every other
+    // figure's is fixed at build time.
+    figDataUrl(fig) {
+      if (fig.phaseSelector)
+        return this.phaseNet ? this.phaseCsvUrls[this.phaseNet] : undefined;
+      return fig.data_url;
+    },
+    figDataName(fig) {
+      if (fig.phaseSelector)
+        return `per_phase_voltages_${this.phaseNet}.csv`;
+      return fig.data_filename;
+    },
+
     // -------- results & KPI verdicts (P2) --------
     buildResults(json) {
       // Convergence warning (P-A): if any of the 48 half-hourly power flows
@@ -1073,6 +1103,18 @@ export default {
         s == null
           ? undefined
           : URL.createObjectURL(new Blob([s], { type: "text/csv" }));
+
+      // Per-phase band data (P5): networks whose CSV parses render natively;
+      // the rest keep the matplotlib image.
+      this.phaseChartBands = {};
+      this.phaseCsvUrls = {};
+      for (const [net, csvStr] of Object.entries(json.lv_phase_data || {})) {
+        const bands = phaseBands(parseFigureCsv(csvStr));
+        if (bands) {
+          this.phaseChartBands[net] = bands;
+          this.phaseCsvUrls[net] = blob(csvStr);
+        }
+      }
 
       // Native interactive charts (P5): built from the SAME CSVs as the
       // download links / verdicts. Each builder returns null if its CSV is
@@ -1161,8 +1203,17 @@ export default {
             {
               name: "Per-phase customer voltages",
               phaseSelector: true,
+              // Limits/shading for the native per-phase chart; which network's
+              // bands to draw follows the phaseNet picker at render time.
+              chart: {
+                limits: [
+                  { value: 0.94, label: "0.94 pu" },
+                  { value: 1.1, label: "1.10 pu" }
+                ],
+                failedHours
+              },
               info:
-                "Solid line = average voltage of the customers on that phase; shaded band = the min–max spread across those customers. The three colours are the three phases; diverging phases indicate unbalance.",
+                "Solid line = average voltage of the customers on that phase; shaded band = the min–max spread across those customers. The three colours are the three phases; diverging phases indicate unbalance. Hover for exact values.",
               info2:
                 "Choose which LV network to inspect. Dashed red lines mark the 0.94–1.10 pu limits."
             }

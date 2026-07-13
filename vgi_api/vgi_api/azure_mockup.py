@@ -462,11 +462,17 @@ def _run_dss_simulation_inner(rd):
     # already in memory, so this adds no extra power-flow solves.
     phase_clrs = {1: "C0", 2: "C1", 3: "C2"}
     lv_phase_pngs = {}
+    # Mean/min/max per phase, shipped as CSV next to each PNG so the frontend
+    # can draw this figure natively (same numbers the PNG is drawn from).
+    lv_phase_headers = {}
+    lv_phase_data = {}
     for p_idx in range(simulation.ckts.N):
         net_id = str(simulation.ckts.ldNo[p_idx])
         phases = simulation._lv_n_phase[list(simulation._lv_n_phase.keys())[p_idx]]
         # |V| of every load in that network over the day, on a 230 V base.
         Vnet = np.abs(np.array([s.VlvLds[p_idx] for s in slns])[:, :, 0]) / 230.0
+        hdr = []
+        cols = []
         plt.figure(figsize=(7, 3.4))
         axP = plt.gca()
         for ph in (1, 2, 3):
@@ -474,10 +480,14 @@ def _run_dss_simulation_inner(rd):
             if not np.any(sel):
                 continue
             band = Vnet[:, sel]
-            axP.fill_between(
-                tt, band.min(axis=1), band.max(axis=1), color=phase_clrs[ph], alpha=0.25
-            )
-            axP.plot(tt, band.mean(axis=1), color=phase_clrs[ph], label=f"Phase {ph}")
+            b_lo, b_hi, b_mean = band.min(axis=1), band.max(axis=1), band.mean(axis=1)
+            hdr += [f"Phase {ph} mean", f"Phase {ph} min", f"Phase {ph} max"]
+            cols += [b_mean, b_lo, b_hi]
+            axP.fill_between(tt, b_lo, b_hi, color=phase_clrs[ph], alpha=0.25)
+            axP.plot(tt, b_mean, color=phase_clrs[ph], label=f"Phase {ph}")
+        if cols:
+            lv_phase_headers[net_id] = hdr
+            lv_phase_data[net_id] = np.column_stack(cols)
         xlmP = axP.get_xlim()
         axP.hlines([0.94, 1.10], *xlmP, linestyles="dashed", color="r", lw=0.8)
         axP.set_xlim(xlmP)
@@ -489,6 +499,8 @@ def _run_dss_simulation_inner(rd):
         plt.tight_layout()
         lv_phase_pngs[net_id] = _fig_to_png()
     results["lv_phase_pngs"] = lv_phase_pngs
+    results["lv_phase_headers"] = lv_phase_headers
+    results["lv_phase_data"] = lv_phase_data
 
     # ------------------------------------------------------------------
     # PLOT: mv_voltages, voltage envelope against time

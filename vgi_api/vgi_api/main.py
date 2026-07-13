@@ -523,6 +523,12 @@ async def simulate(
         "lv_unbalance_data": _prepare_csv(
             results["lv_unbalance_header"], results["lv_unbalance_data"]
         ),
+        # Per-phase mean/min/max voltages per selected network (same numbers
+        # the lv_phase_pngs are drawn from), keyed like lv_phase_pngs.
+        "lv_phase_data": {
+            net_id: _prepare_csv(results["lv_phase_headers"][net_id], data)
+            for net_id, data in results.get("lv_phase_data", {}).items()
+        },
     }
 
     return resultdict
