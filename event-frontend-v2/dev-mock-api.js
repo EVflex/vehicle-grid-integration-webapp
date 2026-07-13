@@ -133,6 +133,32 @@ function trnPowers() {
   return csv(header, rows);
 }
 
+// Per-phase mean/min/max voltage bands for one network. Phases sag by
+// different amounts in the evening (phase 1 worst) so the native chart's
+// diverging-phases story is visible in dev; `sev` deepens the sag so later
+// networks in the picker look different.
+function phaseVoltages(sev) {
+  const header = [];
+  for (const ph of [1, 2, 3])
+    header.push(`Phase ${ph} mean`, `Phase ${ph} min`, `Phase ${ph} max`);
+  const rows = [];
+  for (let t = 0; t < 48; t++) {
+    const row = [];
+    for (const ph of [1, 2, 3]) {
+      const sag = (0.02 + 0.02 * (3 - ph)) * sev * bump(t);
+      const mean = 1.0 - sag;
+      const spread = 0.01 + 1.5 * sag;
+      row.push(
+        +mean.toFixed(4),
+        +(mean - spread).toFixed(4),
+        +(mean + spread / 2).toFixed(4)
+      );
+    }
+    rows.push(row);
+  }
+  return csv(header, rows);
+}
+
 function primaryLoadings() {
   const header = [
     "F1 (to 100), 5 MVA",
@@ -229,6 +255,12 @@ http
           // One per-phase figure per selected network (keyed by id).
           lv_phase_pngs: phaseNets.reduce((o, id) => {
             o[String(id)] = TINY_JPEG;
+            return o;
+          }, {}),
+          // Native per-phase band data; the LAST network is left without data
+          // so the picker exercises the PNG fallback path in dev.
+          lv_phase_data: phaseNets.slice(0, -1).reduce((o, id, i) => {
+            o[String(id)] = phaseVoltages(1 + i * 0.6);
             return o;
           }, {}),
           trn_powers: TINY_JPEG,
