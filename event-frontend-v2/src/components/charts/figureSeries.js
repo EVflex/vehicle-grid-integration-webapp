@@ -13,6 +13,30 @@
    deployments keep working.
    ========================================================================== */
 
+/** Split one CSV line honouring RFC 4180 double quotes — header names like
+ *  "F1 (to 1101), 6.82 MVA" arrive quoted and must stay one field. */
+function splitCsvLine(line) {
+  const fields = [];
+  let cur = "";
+  let quoted = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (quoted) {
+      if (c === '"' && line[i + 1] === '"') {
+        cur += '"';
+        i++;
+      } else if (c === '"') quoted = false;
+      else cur += c;
+    } else if (c === '"' && cur === "") quoted = true;
+    else if (c === ",") {
+      fields.push(cur);
+      cur = "";
+    } else cur += c;
+  }
+  fields.push(cur);
+  return fields;
+}
+
 /** CSV string -> {header: [...], rows: [[...numbers|null]]}. */
 export function parseFigureCsv(str) {
   if (!str || typeof str !== "string") return null;
@@ -21,13 +45,17 @@ export function parseFigureCsv(str) {
     .split("\n")
     .filter(l => l.length);
   if (lines.length < 2) return null;
-  const header = lines[0].split(",");
+  const header = splitCsvLine(lines[0]);
   const rows = lines.slice(1).map(l =>
     l.split(",").map(c => {
       const x = Number(c);
       return isFinite(x) ? x : null; // gaps render as breaks, not zeros
     })
   );
+  // Header/data width mismatch means the header itself had unquoted commas
+  // (pre-quoting API deployments): labels would attach to the wrong lines,
+  // so bail out and let the view fall back to the matplotlib image.
+  if (rows.some(r => r.length !== header.length)) return null;
   return { header, rows };
 }
 
