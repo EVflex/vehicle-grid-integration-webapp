@@ -458,8 +458,43 @@
                       <i class="bi bi-download"></i> csv
                     </a>
                   </div>
+                  <!-- Native interactive charts (P5) when the figure's CSV
+                       parsed; otherwise the matplotlib image below. -->
+                  <template
+                    v-if="fig.chart && fig.chart.type === 'quantile-grid'"
+                  >
+                    <div class="evt-chart-grid">
+                      <div v-for="p in fig.chart.panels" :key="p.net">
+                        <div class="evt-chart-title">
+                          LV network {{ p.net }}
+                        </div>
+                        <quantile-band-chart
+                          :quantiles="p.quantiles"
+                          :limits="fig.chart.limits"
+                          :failed-hours="fig.chart.failedHours"
+                          :height="220"
+                        />
+                      </div>
+                    </div>
+                  </template>
+                  <quantile-band-chart
+                    v-else-if="fig.chart && fig.chart.type === 'quantile'"
+                    :quantiles="fig.chart.quantiles"
+                    :limits="fig.chart.limits"
+                    :failed-hours="fig.chart.failedHours"
+                    :height="280"
+                  />
+                  <multi-line-chart
+                    v-else-if="fig.chart && fig.chart.type === 'lines'"
+                    :series="fig.chart.series"
+                    :limits="fig.chart.limits"
+                    :failed-hours="fig.chart.failedHours"
+                    :unit="fig.chart.unit"
+                    :decimals="fig.chart.decimals"
+                    :height="280"
+                  />
                   <!-- Per-phase figure: user picks which LV network to show. -->
-                  <template v-if="fig.phaseSelector">
+                  <template v-else-if="fig.phaseSelector">
                     <label class="evt-phase-select">
                       LV network
                       <select v-model="phaseNet">
@@ -606,6 +641,16 @@
 import SelectProfile from "../components/SelectProfile.vue";
 import InputDetails from "../components/InputDetails.vue";
 import NetworkExplorer from "../components/NetworkExplorer.vue";
+import QuantileBandChart from "../components/charts/QuantileBandChart.vue";
+import MultiLineChart from "../components/charts/MultiLineChart.vue";
+import {
+  parseFigureCsv,
+  lvQuantilePanels,
+  mvQuantiles,
+  lineSeries,
+  prettyTransformerName,
+  prettyVufName
+} from "../components/charts/figureSeries.js";
 import useVuelidate from "@vuelidate/core";
 import {
   required,
@@ -665,7 +710,13 @@ const PRESETS = {
 };
 
 export default {
-  components: { SelectProfile, InputDetails, NetworkExplorer },
+  components: {
+    SelectProfile,
+    InputDetails,
+    NetworkExplorer,
+    QuantileBandChart,
+    MultiLineChart
+  },
   setup() {
     return { v$: useVuelidate({ $autoDirty: true }) };
   },
@@ -1022,6 +1073,29 @@ export default {
         s == null
           ? undefined
           : URL.createObjectURL(new Blob([s], { type: "text/csv" }));
+
+      // Native interactive charts (P5): built from the SAME CSVs as the
+      // download links / verdicts. Each builder returns null if its CSV is
+      // missing or oddly shaped, and the figure then falls back to the
+      // matplotlib image — older API deployments keep working.
+      const failedHours = json.convergence
+        ? json.convergence.failed_hours || []
+        : [];
+      const lvPanels = lvQuantilePanels(
+        parseFigureCsv(json.lv_comparison_data)
+      );
+      const mvQs = mvQuantiles(parseFigureCsv(json.mv_voltages_data));
+      const vufSeries = lineSeries(
+        parseFigureCsv(json.lv_unbalance_data),
+        prettyVufName
+      );
+      const trnSeries = lineSeries(
+        parseFigureCsv(json.trn_powers_data),
+        prettyTransformerName
+      );
+      const fdrSeries = lineSeries(parseFigureCsv(json.primary_loadings_data));
+      const ratingLimit = [{ value: 100, label: "rating" }];
+
       this.figureGroups = [
         {
           name: "Voltages",
@@ -1029,8 +1103,17 @@ export default {
             {
               name: "LV customer voltages",
               plot: json.lv_comparison,
+              chart: lvPanels && {
+                type: "quantile-grid",
+                panels: lvPanels,
+                limits: [
+                  { value: 0.94, label: "0.94 pu" },
+                  { value: 1.1, label: "1.10 pu" }
+                ],
+                failedHours
+              },
               info:
-                "Each panel is one modelled LV network. The centre line is the median customer's voltage; the shaded band spans all simulated customers (outer edge = min–max, inner = 25–75%).",
+                "Each panel is one modelled LV network. The centre line is the median customer's voltage; the shaded band spans all simulated customers (outer edge = min–max, inner = 25–75%). Hover for exact values.",
               info2:
                 "Voltages are per-unit (×230 gives volts). Dashed red lines mark the statutory limits (0.94–1.10 pu).",
               data_filename: "lv_comparison.csv",
@@ -1039,8 +1122,17 @@ export default {
             {
               name: "MV network voltages",
               plot: json.mv_voltages,
+              chart: mvQs && {
+                type: "quantile",
+                quantiles: mvQs,
+                limits: [
+                  { value: 0.94, label: "0.94 pu" },
+                  { value: 1.06, label: "1.06 pu" }
+                ],
+                failedHours
+              },
               info:
-                "Range, interquartile range and median voltage on the MV network.",
+                "Range, interquartile range and median voltage on the MV network. Hover for exact values.",
               info2: "MV limits are narrower: 0.94 to 1.06 pu.",
               data_filename: "mv_voltages.csv",
               data_url: blob(json.mv_voltages_data)
@@ -1048,6 +1140,17 @@ export default {
             {
               name: "Phase unbalance",
               plot: json.lv_unbalance,
+              chart: vufSeries && {
+                type: "lines",
+                series: vufSeries,
+                limits: [
+                  { value: 1.3, label: "1.3% ER P29" },
+                  { value: 2, label: "2% EN 50160" }
+                ],
+                failedHours,
+                unit: "%",
+                decimals: 2
+              },
               info:
                 "The voltage unbalance factor (VUF) at each LV substation — how unevenly the three phases are loaded — against the 1.3% (ER P29) and 2% (EN 50160) planning levels.",
               info2:
@@ -1075,6 +1178,14 @@ export default {
             {
               name: "Transformer powers",
               plot: json.trn_powers,
+              chart: trnSeries && {
+                type: "lines",
+                series: trnSeries,
+                limits: ratingLimit,
+                failedHours,
+                unit: "%",
+                decimals: 1
+              },
               info:
                 "Utilisation (%) of the primary (HV→MV) and secondary (MV→LV) substations.",
               info2: "100% = the substation's rating (dashed line).",
@@ -1084,6 +1195,14 @@ export default {
             {
               name: "Primary feeders' loadings",
               plot: json.pmry_loadings,
+              chart: fdrSeries && {
+                type: "lines",
+                series: fdrSeries,
+                limits: ratingLimit,
+                failedHours,
+                unit: "%",
+                decimals: 1
+              },
               info:
                 "The primary substation supplies the town through several 11 kV feeders — the main cables leaving the substation busbar, each serving a different part of the network. One line per feeder, measured at the point it leaves the substation.",
               info2:
@@ -1729,6 +1848,19 @@ export default {
   max-width: 100%;
   border: 1px solid var(--line);
   border-radius: 6px;
+}
+/* Native charts (P5): the LV comparison renders one panel per modelled
+   network, two-up where the card is wide enough. */
+.evt-chart-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2px 18px;
+}
+.evt-chart-title {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-top: 6px;
 }
 .evt-phase-select {
   display: inline-flex;

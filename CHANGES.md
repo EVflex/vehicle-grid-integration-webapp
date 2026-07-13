@@ -942,3 +942,45 @@ Verified in the browser against the mock API: map SVG top measured
 identical (590.914 px) across idle → hover → leave → click; caption strip
 height constant at 45.2 px in every state (previously 31 ↔ 45 px); logos
 screenshot-checked in dark and light schemes; 0 console errors.
+
+## 24. Native interactive results charts, phase 1 (2026-07-12)
+`event-frontend-v2/src/components/charts/*` (new),
+`event-frontend-v2/src/views/SimulateNetworkAPI.vue`. Marked P5 in-file.
+
+The five results figures whose numbers already ship in the /simulate
+response (`*_data` CSVs) now render as native, theme-aware, interactive
+charts instead of matplotlib JPEGs: LV customer voltages (one panel per
+modelled network, two-up), MV network voltages, phase unbalance,
+transformer powers and primary feeders' loadings. Hovering shows the exact
+values at that half hour — for the voltage figures a median / IQR /
+min–max tooltip, for the line figures one value per series. Dashed limit
+lines (statutory bands, ratings, VUF planning levels) and the red
+non-converged shading carry over from the matplotlib versions.
+
+- New components: `EvtChart.vue` (thin tree-shaken ECharts host),
+  `QuantileBandChart.vue` (median + IQR + min–max bands via ECharts'
+  stacking trick; tooltip reads the original quantile arrays),
+  `MultiLineChart.vue`, `chartTheme.js` (colours resolved from the app's
+  CSS design tokens at option-build time; rebuilds on OS theme flips) and
+  `figureSeries.js` (CSV → series; header matching by regex so the real
+  API's "0.0% quantile" and the mock's "0%" both parse).
+- Every builder returns null on a missing/odd CSV and the figure falls
+  back to its matplotlib image, so older API deployments keep working.
+  The per-phase and profile figures stay as images until the API also
+  ships their data (phase 2).
+- New dependency: echarts@6 (tree-shaken; the simulate route chunk is
+  223 KB gzipped all-in). Installing it re-resolved the loose
+  `vue-router: ^4.0.0-0` to 4.6, whose dist webpack 4 cannot parse —
+  vue-router is now pinned to 4.1.6.
+- Repo fix: the ROOT .gitignore ignores every `package.json` /
+  `package-lock.json`, so event-frontend-v2's manifest was never
+  committed (a fresh clone could not build the v2 app, and unpinned
+  transitives caused exactly the vue-router breakage above). Both files
+  are now force-added; `event-frontend-v2/dist/` is ignored.
+
+Verified in the browser against the mock API: 7 chart canvases render
+(3 LV panels + MV + unbalance + 2 loadings); quantile tooltip returns
+"16:30 · Median 0.9688 pu · IQR 0.9538–0.9838 · Max/Min" on hover; a 95%
+EV run shades 18:30–19:00 red on every chart alongside the convergence
+banner; light and dark schemes both correct; 0 console errors; lint
+clean; production build succeeds.
