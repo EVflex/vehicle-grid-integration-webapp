@@ -251,10 +251,24 @@ def _b64(data: bytes) -> str:
     return base64.b64encode(data).decode("utf-8")
 
 
+def _csv_field(field: str) -> str:
+    """RFC 4180 quoting: names like 'F1 (to 1101), 6.82 MVA' contain commas
+    and must not split into extra columns."""
+    if any(c in field for c in ',"\n'):
+        return '"' + field.replace('"', '""') + '"'
+    return field
+
+
 def _prepare_csv(header: List[str], plot_data: np.ndarray) -> str:
     """Render a header + 2D array as CSV text for the download links."""
     handle = io.StringIO()
-    np.savetxt(handle, X=plot_data, header=",".join(header), delimiter=",", comments="")
+    np.savetxt(
+        handle,
+        X=plot_data,
+        header=",".join(_csv_field(h) for h in header),
+        delimiter=",",
+        comments="",
+    )
     handle.seek(0)
     return handle.read()
 

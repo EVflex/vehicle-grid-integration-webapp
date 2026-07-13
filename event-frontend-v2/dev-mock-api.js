@@ -52,8 +52,13 @@ const NETWORK_IDS = [
 const DEFAULT_NETS = [1101, 1105, 1109];
 
 function csv(header, rows) {
-  // Mirror _prepare_csv: header line (comma-joined) then float rows.
-  return header.join(",") + "\n" + rows.map(r => r.join(",")).join("\n") + "\n";
+  // Mirror _prepare_csv: header line (comma-joined, RFC 4180-quoted names)
+  // then float rows.
+  const q = h =>
+    /[",\n]/.test(h) ? '"' + h.replace(/"/g, '""') + '"' : h;
+  return (
+    header.map(q).join(",") + "\n" + rows.map(r => r.join(",")).join("\n") + "\n"
+  );
 }
 
 // Evening bump peaking around 18:00 (row 36 of 48 half-hours).

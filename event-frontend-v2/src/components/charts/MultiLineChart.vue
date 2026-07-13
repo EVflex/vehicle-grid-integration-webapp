@@ -68,9 +68,29 @@ export default {
         type: "line",
         data: s.data,
         symbol: "none",
+        triggerLineEvent: true,
         lineStyle: { width: 2, color: palette[i % palette.length] },
         itemStyle: { color: palette[i % palette.length] },
-        emphasis: { focus: "series" },
+        // Hovering a line (or its legend entry) dims the others and names
+        // the hovered one at its right end, so 8 similar feeder lines are
+        // tellable apart without reading the tooltip.
+        emphasis: {
+          focus: "series",
+          lineStyle: { width: 3 },
+          endLabel: {
+            show: true,
+            formatter: p => p.seriesName,
+            align: "right",
+            offset: [-4, 0],
+            color: palette[i % palette.length],
+            fontFamily: t.font,
+            fontSize: 11,
+            fontWeight: 600,
+            backgroundColor: t.card,
+            padding: [2, 5],
+            borderRadius: 3
+          }
+        },
         ...(i === 0
           ? {
               markLine: limitMarkLine(this.limits, t),
